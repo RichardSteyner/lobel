@@ -1,5 +1,25 @@
 @isTest
 public class GeneralTestClass {
+
+    static {
+        Application__c app = new Application__c();
+        app.LotID__c = '001';
+        app.Period__c = '202012';
+        insert app;
+        app = new Application__c();
+        app.Period__c = '202012';
+        app.LotID__c = '004';
+        insert app;
+
+        Bank_Stats__c bk = new Bank_Stats__c();
+        bk.LotID__c = '001';
+        bk.Period__c = '202012';
+        insert bk;
+        bk = new Bank_Stats__c();
+        bk.LotID__c = '002';
+        bk.Period__c = '202012';
+        insert bk;
+    }
     
 	@isTest
     static void DeleteApplicationsTest(){
@@ -22,12 +42,12 @@ public class GeneralTestClass {
         app.Delete__c = 'y';
         lstApp.add(app);
 
-        System.debug([select Id from Application__c].size());
+        System.debug([select Id, LotID__c, Period__c, Delete__c from Application__c].size());
         Test.startTest();
         insert lstApp;
-        System.debug([select Id from Application__c].size());
+        System.debug([select Id, LotID__c, Period__c, Delete__c from Application__c].size());
         Test.stopTest();
-        System.debug([select Id from Application__c].size());
+        System.debug([select Id, LotID__c, Period__c, Delete__c from Application__c].size());
     }
     
     @isTest

@@ -24,7 +24,7 @@ global class clsBatchDeleteApplication implements Database.Batchable<sObject>, D
        		/*If (app.Delete__c== 'y' ){                	
                 applications.add(app);
             }*/
-            if(String.isNotBlank(app.LotID__c) && String.isNotBlank(app.LotID__c)){
+            if(String.isNotBlank(app.LotID__c) && String.isNotBlank(app.Period__c)){
                 lotIds.add(app.LotID__c);
                 periods.add(app.Period__c);
                 lotPeriodConcatenado.add(app.LotID__c + '-' + app.Period__c);
@@ -32,11 +32,13 @@ global class clsBatchDeleteApplication implements Database.Batchable<sObject>, D
         }
         
         String auxConcat;
-        for(Application__c app : [select Id, LotID__c, Period__c 
+        for(Application__c app : [select Id, LotID__c, Period__c, Delete__c 
                                     from Application__c 
-                                    where LotID__c in: lotIds or Period__c in: periods]){
-            auxConcat = app.LotID__c + '-' + app.Period__c;
-            if(lotPeriodConcatenado.contains(auxConcat)) applications.add(app);
+                                    where (LotID__c in: lotIds or Period__c in: periods) ]){
+            if(app.Delete__c!=null && app.Delete__c.equalsIgnoreCase('y')){
+                auxConcat = app.LotID__c + '-' + app.Period__c;
+                if(lotPeriodConcatenado.contains(auxConcat)) applications.add(app);
+            }
         }
         
         if(applications.size()>0){
